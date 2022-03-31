@@ -37,20 +37,49 @@
    ```
 3. 在业务工程的配置文件 generatorConfig.xml 里添加自定义插件
    ```xml
-   <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
-        <!-- 省略其他配置 -->
-        
-        <!-- 自定义的 mybatis-generator-swagger2 插件 -->
-        <plugin type="org.mybatis.generator.plugin.Swagger2Plugin"/>
+   <generatorConfiguration>
+       <properties resource="application.yml"/>
 
-        <!-- 自定义的 mybatis-generator-lombok 插件 -->
-        <plugin type="org.mybatis.generator.plugin.LombokPlugin"/>
+       <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+           <property name="beginningDelimiter" value="`"/>
+           <property name="endingDelimiter" value="`"/>
+          
+           <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+               <property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>
+           </plugin>
+           <!-- 自定义的 mybatis-generator-swagger2 插件 -->
+           <plugin type="org.mybatis.generator.plugin.Swagger2Plugin"/>
 
-        <jdbcConnection>
-            <!-- 设置 useInformationSchema 的值为 true，否则，IntrospectedTable 取到的表 comment 为空字符串 -->
-            <property name="useInformationSchema" value="true" />
-        </jdbcConnection>
-   
-        <!-- 省略其他配置 -->
-   </context>
+           <!-- 自定义的 mybatis-generator-lombok 插件 -->
+           <plugin type="org.mybatis.generator.plugin.LombokPlugin"/>
+
+           <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                           connectionURL="jdbc:mysql://localhost:3306/database?useSSL=false"
+                           userId="root"
+                           password="root">
+               <!-- 设置 useInformationSchema 的值为 true，否则，IntrospectedTable 取到的表 comment 为空字符串 -->
+               <property name="useInformationSchema" value="true" />
+           </jdbcConnection>
+
+           <javaModelGenerator targetPackage="com.zhy.model" targetProject="src/main/java"/>
+
+           <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
+
+           <javaClientGenerator targetPackage="com.zhy.mapper" targetProject="src/main/java"
+                                type="XMLMAPPER"/>
+
+           <table tableName="table" delimitAllColumns="true">
+               <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+           </table>
+
+       </context>
+   </generatorConfiguration>
    ```
+   
+   - 关键字加反引号 ``` ` ```，注意以下三点:
+      ```xml
+      <property name="beginningDelimiter" value="`"/>
+      <property name="endingDelimiter" value="`"/>
+
+      delimitAllColumns="true"
+      ```
