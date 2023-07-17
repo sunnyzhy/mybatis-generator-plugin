@@ -3,6 +3,8 @@
 ## 前言
 由于 spring-boot:2.4.0 以上版本不兼容 maven-resources-plugin:3.2.0，所以示例中使用的是 spring-boot:2.3.6.RELEASE
 
+MyBatis Generator 官网：```https://mybatis.org/generator/configreference/xmlconfig.html```
+
 ## 内容
 - Swagger2Plugin: 自动生成 swagger2 注解
 - LombokPlugin: 自动生成 lombok 注解
@@ -83,3 +85,13 @@
 
       delimitAllColumns="true"
       ```
+
+## 其他配置
+
+```xml
+<javaModelGenerator targetPackage="test.model"
+     targetProject="\MyProject\src">
+  <!-- 设置是否在setter方法中对String类型的字段调用trim()方法 -->
+  <property name="trimStrings" value="true" />
+</javaModelGenerator>
+```
